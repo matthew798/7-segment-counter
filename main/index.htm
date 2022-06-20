@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>7 Segment Counter</title>
+    <style>
+        .container {
+            display: flex;
+            flex-flow: column wrap;
+        }
+
+        .container div{
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button {
+            width: 100%;
+            height: 50px;
+            margin: 5px;
+        }
+
+        input {
+            width: 100%;
+        }
+    </style>
+    <script type="text/javascript">
+
+        function RpcCall(ep, method, cb = null, body = null){
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4){
+                    switch(xhr.status) {
+                    case 200:
+                        if(cb) cb(xhr.responseText);
+                    break;
+                    default: alert( "Unexpected error:  " + this.statusText + "\nPlease try again"); break;
+                    }
+                }
+            };
+            xhr.open(method, 'rpc/' + ep);
+            xhr.send(body);
+        }
+
+        function up(){ RpcCall('up', "POST", res => {document.getElementById('count').innerHTML = res;});}
+        function down(){ RpcCall('down', "POST", res => {document.getElementById('count').innerHTML = res;});}
+        function read(){ RpcCall('count', "GET", res => {document.getElementById('count').innerHTML = res;});}
+        function reset(){ RpcCall('reset', "POST", res => {document.getElementById('count').innerHTML = res;});}
+        function getBrightness() { RpcCall('brightness', "GET"); res => {document.getElementById('brightness').value = parseInt(res);}}
+        function setBrightness(value) {RpcCall('brightness', "PUT", null, value.toString())}
+        function setColor(value) {RpcCall('color', "PUT", null, "0x" + value.toString().substring(1))}
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <div id="count" style="font-size: 100px;">00</div>
+        </div>
+        <div>
+            <button onclick="up()">Increment</button>
+            <button onclick="down()">Decrement</button>
+            <button onclick="reset()">Reset</button>
+            <input type="color" id="color" onchange="setColor(this.value)" value="#000000">
+            <input id="brightness" type="range" min="1" max="254" value="254" onchange="setBrightness(this.value)">
+        </div>
+    </div>
+    <script>
+        (function() {
+            read();
+            getBrightness();
+        })();
+        </script>
+</body>
+</html>
