@@ -1,0 +1,9 @@
+[submodule "components/FastLED"]
+	path = components/FastLED
+	url = https://github.com/matthew798/FastLED.git
+[submodule "components/ArduinoJson"]
+	path = components/ArduinoJson
+	url = https://github.com/bblanchon/ArduinoJson.git
+[submodule "components/arduino"]
+	path = components/arduino
+	url = https://github.com/espressif/arduino-esp32.git
